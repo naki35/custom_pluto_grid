@@ -162,11 +162,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _handleOnChanged(String value) {
-    _cellEditingStatus = formattedValue != value.toString()
-        ? _CellEditingStatus.changed
-        : _initialCellValue.toString() == value.toString()
-            ? _CellEditingStatus.init
-            : _CellEditingStatus.updated;
+    final old = _textController.text;
+
+    _changeValue();
+    PlatformHelper.onMobile(() {
+      widget.stateManager.setKeepFocus(false);
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
+    _cellEditingStatus = _CellEditingStatus.updated;
   }
 
   void _handleOnComplete() {

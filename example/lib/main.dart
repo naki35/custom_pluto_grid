@@ -150,15 +150,21 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         child: PlutoGrid(
           columns: columns,
           rows: rows,
-          columnGroups: columnGroups,
           onLoaded: (PlutoGridOnLoadedEvent event) {
             stateManager = event.stateManager;
+            stateManager.setAutoEditing(true);
             stateManager.setShowColumnFilter(true);
           },
-          onChanged: (PlutoGridOnChangedEvent event) {
-            print(event);
+          createFooter: (PlutoGridStateManager stateManager) {
+            return ElevatedButton(
+              onPressed: () {
+                print(stateManager.refRows[0].cells['name']!.value);
+              },
+              child: const Text("Click me"),
+            );
           },
-          configuration: const PlutoGridConfiguration(),
+          configuration: const PlutoGridConfiguration(
+              localeText: PlutoGridLocaleText.turkish()),
         ),
       ),
     );
