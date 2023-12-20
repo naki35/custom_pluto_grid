@@ -146,7 +146,8 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
-    print("s");
+    //print("s");
+    //arama filtre
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,
