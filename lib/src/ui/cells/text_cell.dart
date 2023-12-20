@@ -138,37 +138,40 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _changeValue({bool notify = true}) {
-    if (formattedValue == _textController.text) {
-      return;
-    }
-
     widget.stateManager.changeCellValue(
       widget.cell,
       _textController.text,
       notify: notify,
     );
-
-    if (notify) {
-      _textController.text = formattedValue;
-
-      _initialCellValue = _textController.text;
-
-      _textController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _textController.text.length),
-      );
-
-      _cellEditingStatus = _CellEditingStatus.updated;
-    }
+    // if (formattedValue == _textController.text) {
+    //   return;
+    // }
+    //
+    // widget.stateManager.changeCellValue(
+    //   widget.cell,
+    //   _textController.text,
+    //   notify: notify,
+    // );
+    //
+    // if (notify) {
+    //   _textController.text = formattedValue;
+    //
+    //   _initialCellValue = _textController.text;
+    //
+    //   _textController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: _textController.text.length),
+    //   );
+    //
+    //   _cellEditingStatus = _CellEditingStatus.updated;
+    // }
   }
 
   void _handleOnChanged(String value) {
-    final old = _textController.text;
-
     _changeValue();
-    PlatformHelper.onMobile(() {
-      widget.stateManager.setKeepFocus(false);
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
+    // PlatformHelper.onMobile(() {
+    //   widget.stateManager.setKeepFocus(false);
+    //   FocusScope.of(context).requestFocus(FocusNode());
+    // });
     _cellEditingStatus = _CellEditingStatus.updated;
   }
 
