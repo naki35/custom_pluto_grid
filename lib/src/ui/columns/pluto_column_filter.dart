@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../ui.dart';
@@ -11,9 +12,15 @@ class PlutoColumnFilter extends PlutoStatefulWidget {
 
   final PlutoColumn column;
 
+  final Function(String)? onSearch;
+
+  final String? filters;
+
   PlutoColumnFilter({
     required this.stateManager,
     required this.column,
+    this.onSearch,
+    this.filters,
     Key? key,
   }) : super(key: ValueKey('column_filter_${column.key}'));
 
@@ -91,7 +98,8 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
 
     _event = stateManager.eventManager!.listener(_handleFocusFromRows);
 
-    updateState(PlutoNotifierEventForceUpdate.instance);
+    updateState(PlutoNotifierEventForceUpdate.instance, widget.onSearch,
+        widget.filters);
   }
 
   @override
@@ -106,7 +114,13 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   }
 
   @override
-  void updateState(PlutoNotifierEvent event) {
+  void updateState(PlutoNotifierEvent event,
+      [Function(String)? onSearch, String? filters]) {
+    if (onSearch != null) {
+      onSearch(filters!);
+      return;
+    }
+
     _filterRows = update<List<PlutoRow>>(
       _filterRows,
       stateManager.filterRowsByField(widget.column.field),
@@ -146,7 +160,6 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
-    //print("s");
     //arama filtre
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
@@ -223,13 +236,13 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
     stateManager.setKeepFocus(false);
   }
 
-  void _handleOnChanged(String changed) {
+  void _handleOnChanged(String changed, [int? debounceMilliseconds]) {
     stateManager.eventManager!.addEvent(
       PlutoGridChangeColumnFilterEvent(
         column: widget.column,
         filterType: widget.column.defaultFilter,
         filterValue: changed,
-        debounceMilliseconds:
+        debounceMilliseconds: debounceMilliseconds ??
             stateManager.configuration.columnFilter.debounceMilliseconds,
       ),
     );
@@ -257,24 +270,87 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
         child: Padding(
           padding: _padding,
           child: Center(
-            child: TextField(
-              focusNode: _focusNode,
-              controller: _controller,
-              enabled: _enabled,
-              style: style.cellTextStyle,
-              onTap: _handleOnTap,
-              onChanged: _handleOnChanged,
-              onEditingComplete: _handleOnEditingComplete,
-              decoration: InputDecoration(
-                hintText: _enabled ? widget.column.defaultFilter.title : '',
-                filled: true,
-                fillColor: _textFieldColor,
-                border: _border,
-                enabledBorder: _border,
-                disabledBorder: _disabledBorder,
-                focusedBorder: _enabledBorder,
-                contentPadding: const EdgeInsets.all(5),
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    focusNode: _focusNode,
+                    controller: _controller,
+                    enabled: _enabled,
+                    style: style.cellTextStyle,
+                    onTap: _handleOnTap,
+                    onChanged: _handleOnChanged,
+                    onEditingComplete: _handleOnEditingComplete,
+                    decoration: InputDecoration(
+                      hintText:
+                          _enabled ? widget.column.defaultFilter.title : '',
+                      filled: true,
+                      fillColor: _textFieldColor,
+                      border: _border,
+                      enabledBorder: _border,
+                      disabledBorder: _disabledBorder,
+                      focusedBorder: _enabledBorder,
+                      contentPadding: const EdgeInsets.all(5),
+                      suffixIcon: widget.column.type.isDate
+                          ? IconButton(
+                              onPressed: () async {
+                                final selectedDate = _controller.text;
+                                final DateTime? picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: (selectedDate != "")
+                                      ? DateFormat("dd.MM.yyyy")
+                                          .parse(selectedDate)
+                                      : DateTime.now(),
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100),
+                                  builder:
+                                      (BuildContext context, Widget? child) {
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                          primary: Color(0xff0e8f92),
+                                          onPrimary: Colors.white,
+                                          surface: Color(0xff0e8f92),
+                                          onSurface: Colors.black,
+                                        ),
+                                        dialogBackgroundColor: Colors.white,
+                                      ),
+                                      child: child!,
+                                    );
+                                  },
+                                );
+                                if (picked != null) {
+                                  _controller.text =
+                                      DateFormat('dd.MM.yyyy').format(picked);
+                                  _handleOnChanged(_controller.text, 0);
+                                }
+
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
+                              icon: const Icon(
+                                Icons.date_range,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : null,
+                    ),
+                  ),
+                ),
+                _controller.text.isEmpty
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        onPressed: () {
+                          _controller.clear();
+                          _handleOnChanged(_controller.text, 0);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          size: 20,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+              ],
             ),
           ),
         ),

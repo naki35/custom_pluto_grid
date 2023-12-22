@@ -76,7 +76,13 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.configuration = const PlutoGridConfiguration(),
     this.notifierFilterResolver,
     this.mode = PlutoGridMode.normal,
+    this.onSearch,
+    this.filters,
   }) : super(key: key);
+
+  final Function(String)? onSearch;
+
+  final String? filters;
 
   /// {@template pluto_grid_property_columns}
   /// The [PlutoColumn] column is delivered as a list and can be added or deleted after grid creation.
@@ -642,7 +648,8 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                 ),
                 LayoutId(
                   id: _StackName.bodyColumns,
-                  child: PlutoBodyColumns(_stateManager),
+                  child: PlutoBodyColumns(
+                      _stateManager, widget.onSearch, widget.filters),
                 ),
 
                 /// Body columns footer.
