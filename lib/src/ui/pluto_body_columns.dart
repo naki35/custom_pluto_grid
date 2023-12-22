@@ -8,8 +8,14 @@ import 'ui.dart';
 class PlutoBodyColumns extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
 
+  final Function(String)? onSearch;
+
+  final String? filters;
+
   const PlutoBodyColumns(
-    this.stateManager, {
+    this.stateManager,
+    this.onSearch,
+    this.filters, {
     super.key,
   });
 
@@ -100,6 +106,8 @@ class PlutoBodyColumnsState extends PlutoStateWithChange<PlutoBodyColumns> {
       child: PlutoBaseColumn(
         stateManager: stateManager,
         column: e,
+        onSearch: widget.onSearch,
+        filters: widget.filters,
       ),
     );
   }

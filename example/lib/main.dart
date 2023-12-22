@@ -59,7 +59,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoColumn(
       title: 'Joined',
       field: 'joined',
-      type: PlutoColumnType.date(),
+      type: PlutoColumnType.date(format: 'dd.MM.yyyy'),
     ),
     PlutoColumn(
       title: 'Working time',
@@ -99,7 +99,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'name': PlutoCell(value: 'Mike'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
+        'joined': PlutoCell(value: '2023-12-01'),
         'working_time': PlutoCell(value: '09:00'),
         'salary': PlutoCell(value: 300),
       },
@@ -110,7 +110,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'name': PlutoCell(value: 'Jack'),
         'age': PlutoCell(value: 25),
         'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
+        'joined': PlutoCell(value: '2023-12-02'),
         'working_time': PlutoCell(value: '10:00'),
         'salary': PlutoCell(value: 400),
       },
@@ -121,7 +121,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'name': PlutoCell(value: 'Suzi'),
         'age': PlutoCell(value: 40),
         'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
+        'joined': PlutoCell(value: '2023-12-02'),
         'working_time': PlutoCell(value: '11:00'),
         'salary': PlutoCell(value: 700),
       },
@@ -163,8 +163,13 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               child: const Text("Click me"),
             );
           },
+          onSearch: (value) {
+            print(value);
+          },
+          filters: 'test',
           configuration: const PlutoGridConfiguration(
-              localeText: PlutoGridLocaleText.turkish()),
+            localeText: PlutoGridLocaleText.turkish(),
+          ),
         ),
       ),
     );

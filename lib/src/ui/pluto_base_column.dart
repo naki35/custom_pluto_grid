@@ -11,10 +11,16 @@ class PlutoBaseColumn extends PlutoStatefulWidget
 
   final double? columnTitleHeight;
 
+  final Function(String)? onSearch;
+
+  final String? filters;
+
   PlutoBaseColumn({
     required this.stateManager,
     required this.column,
     this.columnTitleHeight,
+    this.onSearch,
+    this.filters,
   }) : super(key: column.key);
 
   @override
@@ -48,6 +54,8 @@ class PlutoBaseColumnState extends PlutoStateWithChange<PlutoBaseColumn> {
     _showColumnFilter = update<bool>(
       _showColumnFilter,
       stateManager.showColumnFilter,
+      onSearch: widget.onSearch,
+      filters: widget.filters,
     );
   }
 
@@ -75,6 +83,8 @@ class PlutoBaseColumnState extends PlutoStateWithChange<PlutoBaseColumn> {
             child: PlutoColumnFilter(
               stateManager: stateManager,
               column: widget.column,
+              onSearch: widget.onSearch,
+              filters: widget.filters,
             ),
           ),
       ],
