@@ -36,6 +36,26 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Id',
       field: 'id',
       type: PlutoColumnType.text(),
+      formatter: (value) {
+        if (value == "1") {
+          return "Gelen Evrak";
+        } else if (value == "2") {
+          return "Giden Evrak";
+        } else if (value == "3" || value == "5" || value == "6") {
+          return "Kurum İçi Evrak";
+        } else if (value == "4") {
+          return "Arşiv Evrakı";
+        } else {
+          return value;
+        }
+      },
+      formatterFields: {
+        'Seçiniz': 0,
+        'Gelen Evrak': 1,
+        'Giden Evrak': 2,
+        'Kurum İçi Evrak': 3,
+        'Arşiv Evrakı': 4,
+      },
     ),
     PlutoColumn(
       title: 'Name',
@@ -95,7 +115,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoRow> rows = [
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: 'user1'),
+        'id': PlutoCell(value: '1'),
         'name': PlutoCell(value: 'Mike'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: 'Programmer'),
@@ -106,7 +126,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: 'user2'),
+        'id': PlutoCell(value: '2'),
         'name': PlutoCell(value: 'Jack'),
         'age': PlutoCell(value: 25),
         'role': PlutoCell(value: 'Designer'),
@@ -117,7 +137,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: 'user3'),
+        'id': PlutoCell(value: '2'),
         'name': PlutoCell(value: 'Suzi'),
         'age': PlutoCell(value: 40),
         'role': PlutoCell(value: 'Owner'),

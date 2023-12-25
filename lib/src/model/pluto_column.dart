@@ -84,6 +84,8 @@ class PlutoColumn {
   /// Formatter for display of cell values.
   PlutoColumnValueFormatter? formatter;
 
+  Map<String, int>? formatterFields;
+
   /// Apply the formatter in the editing state.
   /// However, it is applied only when the cell is readonly
   /// or the text cannot be directly modified, such as in the form of select popup.
@@ -209,6 +211,7 @@ class PlutoColumn {
     this.frozen = PlutoColumnFrozen.none,
     this.sort = PlutoColumnSort.none,
     this.formatter,
+    this.formatterFields,
     this.applyFormatterInEditing = false,
     this.backgroundColor,
     this.renderer,

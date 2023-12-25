@@ -41,6 +41,8 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
 
   late final TextEditingController _controller;
 
+  late String _dropdownValue;
+
   String get _filterValue {
     return _filterRows.isEmpty
         ? ''
@@ -95,6 +97,8 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
     widget.column.setFilterFocusNode(_focusNode);
 
     _controller = TextEditingController(text: _filterValue);
+
+    _dropdownValue = widget.column.formatterFields?.keys.first ?? '';
 
     _event = stateManager.eventManager!.listener(_handleFocusFromRows);
 
@@ -273,74 +277,126 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    focusNode: _focusNode,
-                    controller: _controller,
-                    enabled: _enabled,
-                    style: style.cellTextStyle,
-                    onTap: _handleOnTap,
-                    onChanged: _handleOnChanged,
-                    onEditingComplete: _handleOnEditingComplete,
-                    decoration: InputDecoration(
-                      hintText:
-                          _enabled ? widget.column.defaultFilter.title : '',
-                      filled: true,
-                      fillColor: _textFieldColor,
-                      border: _border,
-                      enabledBorder: _border,
-                      disabledBorder: _disabledBorder,
-                      focusedBorder: _enabledBorder,
-                      contentPadding: const EdgeInsets.all(5),
-                      suffixIcon: widget.column.type.isDate
-                          ? IconButton(
-                              onPressed: () async {
-                                final selectedDate = _controller.text;
-                                final DateTime? picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: (selectedDate != "")
-                                      ? DateFormat("dd.MM.yyyy")
-                                          .parse(selectedDate)
-                                      : DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  builder:
-                                      (BuildContext context, Widget? child) {
-                                    return Theme(
-                                      data: ThemeData.light().copyWith(
-                                        colorScheme: const ColorScheme.light(
-                                          primary: Color(0xff0e8f92),
-                                          onPrimary: Colors.white,
-                                          surface: Color(0xff0e8f92),
-                                          onSurface: Colors.black,
-                                        ),
-                                        dialogBackgroundColor: Colors.white,
-                                      ),
-                                      child: child!,
-                                    );
-                                  },
-                                );
-                                if (picked != null) {
-                                  _controller.text =
-                                      DateFormat('dd.MM.yyyy').format(picked);
-                                  _handleOnChanged(_controller.text, 0);
+                  child: (widget.column.formatter != null &&
+                          widget.column.formatterFields != null)
+                      ? DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            value: _dropdownValue,
+                            decoration: InputDecoration(
+                              border: _border,
+                              enabledBorder: _border,
+                              disabledBorder: _disabledBorder,
+                              focusedBorder: _enabledBorder,
+                              contentPadding: const EdgeInsets.all(5),
+                            ),
+                            icon: const Icon(Icons.arrow_drop_down_outlined),
+                            elevation: 4,
+                            style: style.cellTextStyle,
+                            onChanged: (String? value) {
+                              if (value != null &&
+                                  widget.column.formatterFields![value] !=
+                                      null) {
+                                _dropdownValue = value;
+                                if (widget.column.formatterFields![value] ==
+                                    0) {
+                                  _handleOnChanged(
+                                    '',
+                                    0,
+                                  );
+                                } else {
+                                  _handleOnChanged(
+                                    widget.column.formatterFields![value]
+                                        .toString(),
+                                    0,
+                                  );
                                 }
+                              }
+                            },
+                            items: widget.column.formatterFields?.keys
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        )
+                      : TextField(
+                          focusNode: _focusNode,
+                          controller: _controller,
+                          enabled: _enabled,
+                          style: style.cellTextStyle,
+                          onTap: _handleOnTap,
+                          onChanged: _handleOnChanged,
+                          onEditingComplete: _handleOnEditingComplete,
+                          decoration: InputDecoration(
+                            hintText: _enabled
+                                ? widget.column.defaultFilter.title
+                                : '',
+                            filled: true,
+                            fillColor: _textFieldColor,
+                            border: _border,
+                            enabledBorder: _border,
+                            disabledBorder: _disabledBorder,
+                            focusedBorder: _enabledBorder,
+                            contentPadding: const EdgeInsets.all(5),
+                            suffixIcon: widget.column.type.isDate
+                                ? IconButton(
+                                    onPressed: () async {
+                                      final selectedDate = _controller.text;
+                                      final DateTime? picked =
+                                          await showDatePicker(
+                                        context: context,
+                                        initialDate: (selectedDate != "")
+                                            ? DateFormat("dd.MM.yyyy")
+                                                .parse(selectedDate)
+                                            : DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(2100),
+                                        builder: (BuildContext context,
+                                            Widget? child) {
+                                          return Theme(
+                                            data: ThemeData.light().copyWith(
+                                              colorScheme:
+                                                  const ColorScheme.light(
+                                                primary: Color(0xff0e8f92),
+                                                onPrimary: Colors.white,
+                                                surface: Color(0xff0e8f92),
+                                                onSurface: Colors.black,
+                                              ),
+                                              dialogBackgroundColor:
+                                                  Colors.white,
+                                            ),
+                                            child: child!,
+                                          );
+                                        },
+                                      );
+                                      if (picked != null) {
+                                        _controller.text =
+                                            DateFormat('dd.MM.yyyy')
+                                                .format(picked);
+                                        _handleOnChanged(_controller.text, 0);
+                                      }
 
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              },
-                              icon: const Icon(
-                                Icons.date_range,
-                                size: 20,
-                                color: Colors.grey,
-                              ),
-                            )
-                          : null,
-                    ),
-                  ),
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                    },
+                                    icon: const Icon(
+                                      Icons.date_range,
+                                      size: 20,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ),
                 ),
                 _controller.text.isEmpty
                     ? const SizedBox.shrink()
                     : IconButton(
                         onPressed: () {
+                          _dropdownValue =
+                              widget.column.formatterFields?.keys.first ?? '';
                           _controller.clear();
                           _handleOnChanged(_controller.text, 0);
                         },
