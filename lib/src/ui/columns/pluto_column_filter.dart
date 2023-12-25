@@ -282,12 +282,15 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                       ? DropdownButtonHideUnderline(
                           child: DropdownButtonFormField<String>(
                             value: _dropdownValue,
+                            isExpanded: true,
                             decoration: InputDecoration(
                               border: _border,
                               enabledBorder: _border,
                               disabledBorder: _disabledBorder,
                               focusedBorder: _enabledBorder,
                               contentPadding: const EdgeInsets.all(5),
+                              filled: true,
+                              fillColor: _textFieldColor,
                             ),
                             icon: const Icon(Icons.arrow_drop_down_outlined),
                             elevation: 4,
@@ -316,7 +319,12 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(value),
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    value,
+                                  ),
+                                ),
                               );
                             }).toList(),
                           ),
@@ -391,9 +399,9 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                           ),
                         ),
                 ),
-                _controller.text.isEmpty
-                    ? const SizedBox.shrink()
-                    : IconButton(
+                (widget.column.formatterFields == null &&
+                        _controller.text.isNotEmpty)
+                    ? IconButton(
                         onPressed: () {
                           _dropdownValue =
                               widget.column.formatterFields?.keys.first ?? '';
@@ -405,7 +413,8 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                           size: 20,
                           color: Colors.redAccent,
                         ),
-                      ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           ),
