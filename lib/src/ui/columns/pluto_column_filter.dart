@@ -301,7 +301,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                                       null) {
                                 _dropdownValue = value;
                                 if (widget.column.formatterFields![value] ==
-                                    0) {
+                                    "0") {
                                   _handleOnChanged(
                                     '',
                                     0,

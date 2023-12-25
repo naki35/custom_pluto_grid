@@ -84,7 +84,7 @@ class PlutoColumn {
   /// Formatter for display of cell values.
   PlutoColumnValueFormatter? formatter;
 
-  Map<String, int>? formatterFields;
+  Map<String, String>? formatterFields;
 
   /// Apply the formatter in the editing state.
   /// However, it is applied only when the cell is readonly
