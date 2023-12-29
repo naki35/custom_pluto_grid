@@ -78,7 +78,6 @@ class _ExpandedColumn extends StatelessWidget {
       stateManager: stateManager,
       column: column,
       columnTitleHeight: height,
-      filters: "base column group 77",
     );
   }
 }
@@ -184,7 +183,6 @@ class _ColumnGroup extends StatelessWidget {
       child: PlutoBaseColumn(
         stateManager: stateManager,
         column: column,
-        filters: "base column group 183",
       ),
     );
   }

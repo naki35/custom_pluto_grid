@@ -83,8 +83,6 @@ abstract class PlutoStateWithChange<T extends PlutoStatefulWidget>
     U newValue, {
     bool Function(U a, U b)? compare,
     bool? ignoreChange = false,
-    Function(String)? onSearch,
-    String? filters,
   }) {
     if (oldValue == null) {
       _changed = true;

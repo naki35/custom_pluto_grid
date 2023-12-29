@@ -12,15 +12,9 @@ class PlutoColumnFilter extends PlutoStatefulWidget {
 
   final PlutoColumn column;
 
-  final Function(String)? onSearch;
-
-  final String? filters;
-
   PlutoColumnFilter({
     required this.stateManager,
     required this.column,
-    this.onSearch,
-    this.filters,
     Key? key,
   }) : super(key: ValueKey('column_filter_${column.key}'));
 
@@ -102,8 +96,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
 
     _event = stateManager.eventManager!.listener(_handleFocusFromRows);
 
-    updateState(PlutoNotifierEventForceUpdate.instance, widget.onSearch,
-        widget.filters);
+    updateState(PlutoNotifierEventForceUpdate.instance);
   }
 
   @override
@@ -118,13 +111,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   }
 
   @override
-  void updateState(PlutoNotifierEvent event,
-      [Function(String)? onSearch, String? filters]) {
-    if (onSearch != null) {
-      onSearch(filters!);
-      return;
-    }
-
+  void updateState(PlutoNotifierEvent event) {
     _filterRows = update<List<PlutoRow>>(
       _filterRows,
       stateManager.filterRowsByField(widget.column.field),

@@ -36,6 +36,9 @@ typedef PlutoOnRowsMovedEventCallback = void Function(
 typedef PlutoOnColumnsMovedEventCallback = void Function(
     PlutoGridOnColumnsMovedEvent event);
 
+typedef PlutoOnSearchEventCallback = List<PlutoRow> Function(
+    List<PlutoRow> searchList);
+
 typedef CreateHeaderCallBack = Widget Function(
     PlutoGridStateManager stateManager);
 
@@ -77,12 +80,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.notifierFilterResolver,
     this.mode = PlutoGridMode.normal,
     this.onSearch,
-    this.filters,
   }) : super(key: key);
-
-  final Function(String)? onSearch;
-
-  final String? filters;
 
   /// {@template pluto_grid_property_columns}
   /// The [PlutoColumn] column is delivered as a list and can be added or deleted after grid creation.
@@ -204,6 +202,22 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// or frozen it to the left or right.
   /// {@endtemplate}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
+  /// {@template pluto_grid_property_onSearch}
+  /// [onSearch] is user for custom filtering.
+  /// If you want to use the default filter, don't use this.
+  /// [onSearch] returns a list of [PlutoRow]s.
+  /// The list of [PlutoRow]s returned by [onSearch] is
+  /// the list of [PlutoRow]s that match the search criteria.
+  /// ```dart
+  /// {
+  ///  'column': PlutoColumn, // Searched column
+  ///  'type': PlutoFilterType, // Type of filter
+  ///  'value': dynamic, // Search value
+  ///  }
+  ///  ```
+  /// {@endtemplate}
+  final PlutoOnSearchEventCallback? onSearch;
 
   /// {@template pluto_grid_property_createHeader}
   /// [createHeader] is a user-definable area located above the upper column area of [PlutoGrid].
@@ -520,6 +534,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowSecondaryTap: widget.onRowSecondaryTap,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
+      onSearch: widget.onSearch,
       rowColorCallback: widget.rowColorCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
@@ -648,8 +663,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                 ),
                 LayoutId(
                   id: _StackName.bodyColumns,
-                  child: PlutoBodyColumns(
-                      _stateManager, widget.onSearch, widget.filters),
+                  child: PlutoBodyColumns(_stateManager),
                 ),
 
                 /// Body columns footer.
