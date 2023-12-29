@@ -36,8 +36,7 @@ typedef PlutoOnRowsMovedEventCallback = void Function(
 typedef PlutoOnColumnsMovedEventCallback = void Function(
     PlutoGridOnColumnsMovedEvent event);
 
-typedef PlutoOnSearchEventCallback = List<PlutoRow> Function(
-    List<PlutoRow> searchList);
+typedef PlutoOnSearchEventCallback = void Function(List<PlutoRow> filterList);
 
 typedef CreateHeaderCallBack = Widget Function(
     PlutoGridStateManager stateManager);

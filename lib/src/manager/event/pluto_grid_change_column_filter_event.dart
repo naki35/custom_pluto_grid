@@ -29,9 +29,6 @@ class PlutoGridChangeColumnFilterEvent extends PlutoGridEvent {
         stateManager!.filterRowsByField(column.field);
 
     if (stateManager.onSearch != null) {
-      stateManager.refRows.clearFromOriginal();
-      stateManager.refRows.clear();
-
       List<PlutoRow> allRows = [
         ...stateManager.filterRows,
         FilterHelper.createFilterRow(
@@ -48,9 +45,8 @@ class PlutoGridChangeColumnFilterEvent extends PlutoGridEvent {
           filteredList.add(element);
         }
       }
-      stateManager.refRows.addAll(
-        stateManager.onSearch!(filteredList),
-      );
+
+      stateManager.onSearch!(filteredList);
     }
 
     if (foundFilterRows.isEmpty) {
