@@ -46,7 +46,7 @@ class PlutoGridChangeColumnFilterEvent extends PlutoGridEvent {
         }
       }
 
-      stateManager.onSearch!(filteredList);
+      stateManager.onSearch!(filteredList, true);
     }
 
     if (foundFilterRows.isEmpty) {
