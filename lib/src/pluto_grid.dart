@@ -36,6 +36,9 @@ typedef PlutoOnRowsMovedEventCallback = void Function(
 typedef PlutoOnColumnsMovedEventCallback = void Function(
     PlutoGridOnColumnsMovedEvent event);
 
+typedef PlutoOnColumnHideEventCallback = void Function(
+    PlutoGridOnColumnHideEvent event);
+
 typedef PlutoOnSearchEventCallback = void Function(
     List<PlutoRow> filterList, bool? setPage);
 
@@ -71,6 +74,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.onRowSecondaryTap,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnHide,
     this.createHeader,
     this.createFooter,
     this.noRowsWidget,
@@ -202,6 +206,8 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// or frozen it to the left or right.
   /// {@endtemplate}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
+  final PlutoOnColumnHideEventCallback? onColumnHide;
 
   /// {@template pluto_grid_property_onSearch}
   /// [onSearch] is user for custom filtering.
@@ -534,6 +540,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowSecondaryTap: widget.onRowSecondaryTap,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
+      onColumnHide: widget.onColumnHide,
       onSearch: widget.onSearch,
       rowColorCallback: widget.rowColorCallback,
       createHeader: widget.createHeader,
@@ -1455,11 +1462,13 @@ class PlutoGridOnRowsMovedEvent {
 /// If 1 column is frozen to the right, [visualIndex] becomes 4.
 /// But the actual index is preserved.
 class PlutoGridOnColumnsMovedEvent {
+  final int oldIdx;
   final int idx;
   final int visualIdx;
   final List<PlutoColumn> columns;
 
   const PlutoGridOnColumnsMovedEvent({
+    required this.oldIdx,
     required this.idx,
     required this.visualIdx,
     required this.columns,
@@ -1474,6 +1483,16 @@ class PlutoGridOnColumnsMovedEvent {
 
     return text;
   }
+}
+
+class PlutoGridOnColumnHideEvent {
+  final bool isHidden;
+  final PlutoColumn column;
+
+  const PlutoGridOnColumnHideEvent({
+    required this.isHidden,
+    required this.column,
+  });
 }
 
 /// Argument of [PlutoGrid.rowColumnCallback] callback

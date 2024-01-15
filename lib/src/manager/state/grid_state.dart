@@ -28,6 +28,8 @@ abstract class IGridState {
 
   PlutoOnColumnsMovedEventCallback? get onColumnsMoved;
 
+  PlutoOnColumnHideEventCallback? get onColumnHide;
+
   PlutoColumnMenuDelegate get columnMenuDelegate;
 
   CreateHeaderCallBack? get createHeader;

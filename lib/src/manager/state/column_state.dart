@@ -359,6 +359,7 @@ mixin ColumnState implements IPlutoGridState {
 
     if (onColumnsMoved != null) {
       onColumnsMoved!(PlutoGridOnColumnsMovedEvent(
+        oldIdx: refColumns.indexOf(column),
         idx: refColumns.indexOf(column),
         visualIdx: columnIndex(column)!,
         columns: [column],
@@ -520,6 +521,7 @@ mixin ColumnState implements IPlutoGridState {
 
     if (onColumnsMoved != null) {
       onColumnsMoved!(PlutoGridOnColumnsMovedEvent(
+        oldIdx: index,
         idx: targetIndex,
         visualIdx: columnIndex(columnToMove)!,
         columns: [columnToMove],
@@ -631,6 +633,15 @@ mixin ColumnState implements IPlutoGridState {
     column.hide = hide;
 
     _updateAfterHideColumn(columns: [column], notify: notify);
+
+    if (onColumnHide != null) {
+      onColumnHide!(
+        PlutoGridOnColumnHideEvent(
+          isHidden: hide,
+          column: column,
+        ),
+      );
+    }
   }
 
   @override

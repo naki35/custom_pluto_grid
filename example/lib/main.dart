@@ -50,11 +50,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         }
       },
       formatterFields: {
-        'Seçiniz': 0,
-        'Gelen Evrak': 1,
-        'Giden Evrak': 2,
-        'Kurum İçi Evrak': 3,
-        'Arşiv Evrakı': 4,
+        'Seçiniz': "0",
+        'Gelen Evrak': "1",
+        'Giden Evrak': "2",
+        'Kurum İçi Evrak': "3",
+        'Arşiv Evrakı': "4",
       },
     ),
     PlutoColumn(
@@ -148,6 +148,42 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
   ];
 
+  final List<PlutoRow> rows2 = [
+    PlutoRow(
+      cells: {
+        'id': PlutoCell(value: '1'),
+        'name': PlutoCell(value: 'DENEME'),
+        'age': PlutoCell(value: 20),
+        'role': PlutoCell(value: '3g3f32f233f22f'),
+        'joined': PlutoCell(value: '2023-12-01'),
+        'working_time': PlutoCell(value: '09:00'),
+        'salary': PlutoCell(value: 300),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'id': PlutoCell(value: '2'),
+        'name': PlutoCell(value: 'TEST3'),
+        'age': PlutoCell(value: 25),
+        'role': PlutoCell(value: 'dfvfdvdfvfd'),
+        'joined': PlutoCell(value: '2023-12-02'),
+        'working_time': PlutoCell(value: '10:00'),
+        'salary': PlutoCell(value: 400),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'id': PlutoCell(value: '2'),
+        'name': PlutoCell(value: 'TESTTT'),
+        'age': PlutoCell(value: 40),
+        'role': PlutoCell(value: 'DGSDGDSGGDSGDS'),
+        'joined': PlutoCell(value: '2023-12-02'),
+        'working_time': PlutoCell(value: '11:00'),
+        'salary': PlutoCell(value: 700),
+      },
+    ),
+  ];
+
   /// columnGroups that can group columns can be omitted.
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
@@ -175,6 +211,14 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             stateManager.setAutoEditing(true);
             stateManager.setShowColumnFilter(true);
           },
+          onColumnsMoved: (event) {
+            print(event.oldIdx);
+            print(event.idx);
+          },
+          onColumnHide: (event) {
+            print(event.isHidden);
+            print(event.column);
+          },
           createFooter: (PlutoGridStateManager stateManager) {
             return ElevatedButton(
               onPressed: () {
@@ -183,15 +227,63 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               child: const Text("Click me"),
             );
           },
-          onSearch: (value) {
-            print(value);
+          onSearch: (List<PlutoRow> value, bool? setPage) {
+            List<PlutoRow> filteredList = filterData(rows2, value);
           },
-          filters: 'test',
           configuration: const PlutoGridConfiguration(
             localeText: PlutoGridLocaleText.turkish(),
           ),
         ),
       ),
     );
+  }
+
+  List<PlutoRow> filterData(
+    List<PlutoRow> dataList,
+    List<PlutoRow> filterList,
+  ) {
+    List<PlutoRow> filteredList = [];
+
+    //Set<String> usedColumns = {};
+    //print(filterList);
+    for (var dataRow in dataList) {
+      bool isMatch = true;
+
+      for (var filterRow in filterList.reversed.toList()) {
+        String columnName = filterRow.cells['column']?.value ?? '';
+
+        // if (usedColumns.contains(columnName)) {
+        //   continue;
+        // }
+
+        dynamic filterValue = filterRow.cells['value']?.value;
+        print(filterValue);
+        if (filterRow.cells['type']?.value == const PlutoFilterTypeContains() &&
+            !dataRow.cells[columnName]!.value
+                .toString()
+                .toLowerCase()
+                .contains(filterValue.toString().toLowerCase())) {
+          isMatch = false;
+          break;
+        }
+
+        if (filterRow.cells['type']?.value != const PlutoFilterTypeContains() &&
+            dataRow.cells[columnName]?.value.toLowerCase() !=
+                filterValue.toLowerCase()) {
+          isMatch = false;
+          break;
+        }
+
+        //usedColumns.add(columnName);
+      }
+
+      //usedColumns.clear();
+
+      if (isMatch) {
+        filteredList.add(dataRow);
+      }
+    }
+
+    return filteredList;
   }
 }
