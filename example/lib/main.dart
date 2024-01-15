@@ -33,7 +33,7 @@ class PlutoGridExamplePage extends StatefulWidget {
 class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
-      title: 'Id',
+      title: '',
       field: 'id',
       type: PlutoColumnType.text(),
       formatter: (value) {
