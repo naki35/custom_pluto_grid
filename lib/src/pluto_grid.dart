@@ -64,6 +64,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     Key? key,
     required this.columns,
     required this.rows,
+    this.rowGroupBy,
     this.columnGroups,
     this.onLoaded,
     this.onChanged,
@@ -134,6 +135,8 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// [columnGroups] can be expressed in UI by grouping columns.
   /// {@endtemplate}
   final List<PlutoColumnGroup>? columnGroups;
+
+  final String? rowGroupBy;
 
   /// {@template pluto_grid_property_onLoaded}
   /// [PlutoGrid] completes setting and passes [PlutoGridStateManager] to [event].
@@ -532,6 +535,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
         horizontal: _horizontalScroll,
       ),
       columnGroups: widget.columnGroups,
+      rowGroupBy: widget.rowGroupBy,
       onChanged: widget.onChanged,
       onSelected: widget.onSelected,
       onSorted: widget.onSorted,

@@ -33,6 +33,11 @@ class PlutoGridExamplePage extends StatefulWidget {
 class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
+      title: 'Name',
+      field: 'name',
+      type: PlutoColumnType.text(),
+    ),
+    PlutoColumn(
       title: '',
       field: 'id',
       type: PlutoColumnType.text(),
@@ -46,7 +51,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         } else if (value == "4") {
           return "Arşiv Evrakı";
         } else {
-          return value;
+          return "";
         }
       },
       formatterFields: {
@@ -56,11 +61,6 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'Kurum İçi Evrak': "3",
         'Arşiv Evrakı': "4",
       },
-    ),
-    PlutoColumn(
-      title: 'Name',
-      field: 'name',
-      type: PlutoColumnType.text(),
     ),
     PlutoColumn(
       title: 'Age',
@@ -115,8 +115,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoRow> rows = [
     PlutoRow(
       cells: {
+        'name': PlutoCell(value: 'Test 1 Makamı (Test 2 Vekalet)'),
         'id': PlutoCell(value: '1'),
-        'name': PlutoCell(value: 'Mike'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: 'Programmer'),
         'joined': PlutoCell(value: '2023-12-01'),
@@ -126,8 +126,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: '2'),
         'name': PlutoCell(value: 'Jack'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 25),
         'role': PlutoCell(value: 'Designer'),
         'joined': PlutoCell(value: '2023-12-02'),
@@ -137,8 +137,85 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
+        'name': PlutoCell(value: 'Test 1 Makamı (Test 2 Vekalet)'),
         'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 20),
+        'role': PlutoCell(value: 'Programmer'),
+        'joined': PlutoCell(value: '2023-12-01'),
+        'working_time': PlutoCell(value: '09:00'),
+        'salary': PlutoCell(value: 300),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Test 1 Makamı (Test 2 Vekalet)'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 20),
+        'role': PlutoCell(value: 'Programmer'),
+        'joined': PlutoCell(value: '2023-12-01'),
+        'working_time': PlutoCell(value: '09:00'),
+        'salary': PlutoCell(value: 300),
+      },
+    ),
+    PlutoRow(
+      cells: {
         'name': PlutoCell(value: 'Suzi'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 33),
+        'role': PlutoCell(value: 'RRRR'),
+        'joined': PlutoCell(value: '2024-12-02'),
+        'working_time': PlutoCell(value: '12:00'),
+        'salary': PlutoCell(value: 111),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Jack'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 25),
+        'role': PlutoCell(value: 'Designer'),
+        'joined': PlutoCell(value: '2023-12-02'),
+        'working_time': PlutoCell(value: '10:00'),
+        'salary': PlutoCell(value: 400),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Suzi'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 55),
+        'role': PlutoCell(value: 'efewfew'),
+        'joined': PlutoCell(value: '2021-12-02'),
+        'working_time': PlutoCell(value: '14:00'),
+        'salary': PlutoCell(value: 60),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Suzi'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 70),
+        'role': PlutoCell(value: 'grfgerg'),
+        'joined': PlutoCell(value: '2023-12-02'),
+        'working_time': PlutoCell(value: '11:00'),
+        'salary': PlutoCell(value: 700),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Suzi'),
+        'id': PlutoCell(value: '2'),
+        'age': PlutoCell(value: 40),
+        'role': PlutoCell(value: 'h56h5656'),
+        'joined': PlutoCell(value: '2023-12-02'),
+        'working_time': PlutoCell(value: '11:00'),
+        'salary': PlutoCell(value: 700),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'name': PlutoCell(value: 'Suzi'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 40),
         'role': PlutoCell(value: 'Owner'),
         'joined': PlutoCell(value: '2023-12-02'),
@@ -151,8 +228,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoRow> rows2 = [
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: '1'),
         'name': PlutoCell(value: 'DENEME'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: '3g3f32f233f22f'),
         'joined': PlutoCell(value: '2023-12-01'),
@@ -162,8 +239,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: '2'),
         'name': PlutoCell(value: 'TEST3'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 25),
         'role': PlutoCell(value: 'dfvfdvdfvfd'),
         'joined': PlutoCell(value: '2023-12-02'),
@@ -173,8 +250,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: '2'),
         'name': PlutoCell(value: 'TESTTT'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 40),
         'role': PlutoCell(value: 'DGSDGDSGGDSGDS'),
         'joined': PlutoCell(value: '2023-12-02'),
@@ -206,8 +283,27 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         child: PlutoGrid(
           columns: columns,
           rows: rows,
+          rowGroupBy: 'id',
           onLoaded: (PlutoGridOnLoadedEvent event) {
             stateManager = event.stateManager;
+            // stateManager.setRowGroup(PlutoRowGroupByColumnDelegate(
+            //   columns: [
+            //     stateManager.columns
+            //         .where((element) => element.title == 'Name')
+            //         .first,
+            //   ],
+            //   // Decide whether to display the expand/collapse buttons in the first cell.
+            //   // To set this value to true when grouped by column,
+            //   // You need to hide the columns except for the first column.
+            //   // stateManager.hideColumns(stateManager.columns[1]);
+            //   // If this value is false, expand/collapse buttons are displayed to fit the column depth.
+            //   showFirstExpandableIcon: false,
+            //   // Decide whether to display the number of sub-rows of the grouped column in the cell.
+            //   showCount: true,
+            //   // Decide whether to display a summary when displaying the number of sub-rows.
+            //   // ex) 1,234,567 > 1.2M
+            //   enableCompactCount: true,
+            // ));
             stateManager.setAutoEditing(true);
             stateManager.setShowColumnFilter(true);
           },
@@ -228,7 +324,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             );
           },
           onSearch: (List<PlutoRow> value, bool? setPage) {
-            List<PlutoRow> filteredList = filterData(rows2, value);
+            //List<PlutoRow> filteredList = filterData(rows2, value);
           },
           configuration: const PlutoGridConfiguration(
             localeText: PlutoGridLocaleText.turkish(),

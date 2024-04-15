@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -70,6 +71,10 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
   @override
   Widget build(BuildContext context) {
     final scrollbarConfig = stateManager.configuration.scrollbar;
+    var groupedMap = groupBy(
+      stateManager.rows,
+      (PlutoRow custom) => custom.cells[stateManager.rowGroupBy]?.value,
+    );
 
     return PlutoScrollbar(
       verticalController:
@@ -94,24 +99,64 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
         physics: const ClampingScrollPhysics(),
         child: CustomSingleChildLayout(
           delegate: ListResizeDelegate(stateManager, _columns),
-          child: ListView.builder(
-            controller: _verticalScroll,
-            scrollDirection: Axis.vertical,
-            physics: const ClampingScrollPhysics(),
-            itemCount: _rows.length,
-            itemExtent: stateManager.rowTotalHeight,
-            addRepaintBoundaries: false,
-            itemBuilder: (ctx, i) {
-              return PlutoBaseRow(
-                key: ValueKey('body_row_${_rows[i].key}'),
-                rowIdx: i,
-                row: _rows[i],
-                columns: _columns,
-                stateManager: stateManager,
-                visibilityLayout: true,
-              );
-            },
-          ),
+          child: groupedMap.length == 1
+              ? ListView.builder(
+                  controller: _verticalScroll,
+                  scrollDirection: Axis.vertical,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: _rows.length,
+                  itemExtent: stateManager.rowTotalHeight,
+                  addRepaintBoundaries: false,
+                  itemBuilder: (ctx, i) {
+                    return PlutoBaseRow(
+                      key: ValueKey('body_row_${_rows[i].key}'),
+                      rowIdx: i,
+                      row: _rows[i],
+                      columns: _columns,
+                      stateManager: stateManager,
+                      visibilityLayout: true,
+                    );
+                  },
+                )
+              : SingleChildScrollView(
+                  controller: _verticalScroll,
+                  child: Column(
+                    children: groupedMap.entries.map((e) {
+                      return ExpansionTile(
+                        title: Text(
+                          e.key.toString(),
+                          style:
+                              stateManager.configuration.style.columnTextStyle,
+                        ),
+                        initiallyExpanded: true,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        collapsedIconColor:
+                            stateManager.configuration.style.disabledIconColor,
+                        iconColor: stateManager.configuration.style.iconColor,
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: e.value.length,
+                            itemExtent: stateManager.rowTotalHeight,
+                            addRepaintBoundaries: false,
+                            itemBuilder: (ctx, i) {
+                              return PlutoBaseRow(
+                                key: ValueKey('body_row_${e.value[i].key}'),
+                                rowIdx: i,
+                                row: e.value[i],
+                                columns: _columns,
+                                stateManager: stateManager,
+                                visibilityLayout: true,
+                              );
+                            },
+                          )
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
         ),
       ),
     );
