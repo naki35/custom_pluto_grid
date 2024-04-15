@@ -116,7 +116,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoRow(
       cells: {
         'name': PlutoCell(value: 'Test 1 Makamı (Test 2 Vekalet)'),
-        'id': PlutoCell(value: '1'),
+        'id': PlutoCell(value: '2'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: 'Programmer'),
         'joined': PlutoCell(value: '2023-12-01'),
