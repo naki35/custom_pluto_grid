@@ -1,5 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../helper/platform_helper.dart';
@@ -84,6 +84,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       isAlwaysShown: scrollbarConfig.isAlwaysShown,
       onlyDraggingThumb: scrollbarConfig.onlyDraggingThumb,
       enableHover: PlatformHelper.isDesktop,
+      enableScrollAfterDragEnd: scrollbarConfig.enableScrollAfterDragEnd,
       thickness: scrollbarConfig.scrollbarThickness,
       thicknessWhileDragging: scrollbarConfig.scrollbarThicknessWhileDragging,
       hoverWidth: scrollbarConfig.hoverWidth,
@@ -93,6 +94,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       scrollBarTrackColor: scrollbarConfig.scrollBarTrackColor,
       radius: scrollbarConfig.scrollbarRadius,
       radiusWhileDragging: scrollbarConfig.scrollbarRadiusWhileDragging,
+      longPressDuration: scrollbarConfig.longPressDuration,
       child: SingleChildScrollView(
         controller: _horizontalScroll,
         scrollDirection: Axis.horizontal,

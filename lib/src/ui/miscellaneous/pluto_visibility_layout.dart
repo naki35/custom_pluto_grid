@@ -391,10 +391,10 @@ class PlutoVisibilityLayoutRenderObjectElement extends RenderObjectElement
 
 class PlutoVisibilityLayoutId extends LayoutId {
   PlutoVisibilityLayoutId({
-    Key? key,
+    super.key,
     required super.id,
-    required PlutoVisibilityLayoutChild child,
-  }) : super(key: key, child: child);
+    required PlutoVisibilityLayoutChild super.child,
+  });
 
   PlutoVisibilityLayoutChild get layoutChild =>
       child as PlutoVisibilityLayoutChild;
@@ -417,7 +417,10 @@ class _NullElement extends Element {
   bool get debugDoingBuild => throw UnimplementedError();
 
   @override
-  void performRebuild() => throw UnimplementedError();
+  void performRebuild() {
+    super.performRebuild();
+    throw UnimplementedError();
+  }
 }
 
 class _NullWidget extends Widget {

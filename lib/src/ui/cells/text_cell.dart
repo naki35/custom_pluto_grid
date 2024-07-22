@@ -18,8 +18,8 @@ abstract class TextCell extends StatefulWidget {
     required this.cell,
     required this.column,
     required this.row,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 }
 
 abstract class TextFieldProps {
@@ -52,7 +52,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   void initState() {
     super.initState();
 
-    cellFocus = FocusNode(onKey: _handleOnKey);
+    cellFocus = FocusNode(onKeyEvent: _handleOnKey);
 
     widget.stateManager.setTextEditingController(_textController);
 
@@ -69,28 +69,24 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   @override
   void dispose() {
-    _debounce.dispose();
-
-    _textController.dispose();
-
-    cellFocus.dispose();
-
     /**
      * Saves the changed value when moving a cell while text is being input.
      * if user do not press enter key, onEditingComplete is not called and the value is not saved.
      */
     if (_cellEditingStatus.isChanged) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _changeValue(notify: false);
-
-        widget.stateManager.notifyListenersOnPostFrame();
-      });
+      _changeValue();
     }
 
     if (!widget.stateManager.isEditing ||
         widget.stateManager.currentColumn?.enableEditingMode != true) {
       widget.stateManager.setTextEditingController(null);
     }
+
+    _debounce.dispose();
+
+    _textController.dispose();
+
+    cellFocus.dispose();
 
     super.dispose();
   }
@@ -143,35 +139,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _textController.text,
       notify: notify,
     );
-    // if (formattedValue == _textController.text) {
-    //   return;
-    // }
-    //
-    // widget.stateManager.changeCellValue(
-    //   widget.cell,
-    //   _textController.text,
-    //   notify: notify,
-    // );
-    //
-    // if (notify) {
-    //   _textController.text = formattedValue;
-    //
-    //   _initialCellValue = _textController.text;
-    //
-    //   _textController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: _textController.text.length),
-    //   );
-    //
-    //   _cellEditingStatus = _CellEditingStatus.updated;
-    // }
   }
 
   void _handleOnChanged(String value) {
     _changeValue();
-    // PlatformHelper.onMobile(() {
-    //   widget.stateManager.setKeepFocus(false);
-    //   FocusScope.of(context).requestFocus(FocusNode());
-    // });
     _cellEditingStatus = _CellEditingStatus.updated;
   }
 
@@ -188,7 +159,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     });
   }
 
-  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,

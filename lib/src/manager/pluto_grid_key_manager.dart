@@ -74,15 +74,12 @@ class PlutoGridKeyManager {
   }
 
   void _handler(PlutoKeyManagerEvent keyEvent) {
-    stateManager.keyPressed.shift = keyEvent.isShiftPressed;
-    stateManager.keyPressed.ctrl = keyEvent.isCtrlPressed;
-
     if (keyEvent.isKeyUpEvent) return;
 
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,
-      state: RawKeyboard.instance,
+      state: HardwareKeyboard.instance,
     )) {
       return;
     }
