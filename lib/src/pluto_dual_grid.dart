@@ -185,6 +185,7 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
         onRowChecked: props.onRowChecked,
         onRowDoubleTap: props.onRowDoubleTap,
         onRowSecondaryTap: props.onRowSecondaryTap,
+        onRowLongPress: props.onRowLongPress,
         onRowsMoved: props.onRowsMoved,
         onColumnsMoved: props.onColumnsMoved,
         createHeader: props.createHeader,
@@ -529,6 +530,9 @@ class PlutoDualGridProps {
   /// {@macro pluto_grid_property_onRowSecondaryTap}
   final PlutoOnRowSecondaryTapEventCallback? onRowSecondaryTap;
 
+  /// {@macro pluto_grid_property_onRowLongPress}
+  final PlutoOnRowLongPressEventCallback? onRowLongPress;
+
   /// {@macro pluto_grid_property_onRowsMoved}
   final PlutoOnRowsMovedEventCallback? onRowsMoved;
 
@@ -577,6 +581,7 @@ class PlutoDualGridProps {
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowLongPress,
     this.onRowsMoved,
     this.onColumnsMoved,
     this.createHeader,

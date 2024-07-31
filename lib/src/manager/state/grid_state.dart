@@ -24,6 +24,8 @@ abstract class IGridState {
 
   PlutoOnRowSecondaryTapEventCallback? get onRowSecondaryTap;
 
+  PlutoOnRowLongPressEventCallback? get onRowLongPress;
+
   PlutoOnRowsMovedEventCallback? get onRowsMoved;
 
   PlutoOnColumnsMovedEventCallback? get onColumnsMoved;

@@ -92,6 +92,15 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
 
     if (stateManager.mode.isMultiSelectMode) {
       stateManager.handleOnSelected();
+    } else {
+      stateManager.onRowLongPress!(
+        PlutoGridOnRowLongPressEvent(
+          row: stateManager.getRowByIdx(rowIdx)!,
+          rowIdx: rowIdx,
+          cell: cell,
+          offset: offset,
+        ),
+      );
     }
   }
 

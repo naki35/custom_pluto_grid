@@ -86,7 +86,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
   initState() {
     super.initState();
 
-    _focusNode = FocusNode(onKey: _handleOnKey);
+    _focusNode = FocusNode(onKeyEvent: _handleOnKey);
 
     widget.column.setFilterFocusNode(_focusNode);
 
@@ -150,7 +150,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
     stateManager.notifyListeners();
   }
 
-  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     //arama filtre
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,

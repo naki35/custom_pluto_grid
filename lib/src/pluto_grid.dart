@@ -30,6 +30,9 @@ typedef PlutoOnRowDoubleTapEventCallback = void Function(
 typedef PlutoOnRowSecondaryTapEventCallback = void Function(
     PlutoGridOnRowSecondaryTapEvent event);
 
+typedef PlutoOnRowLongPressEventCallback = void Function(
+    PlutoGridOnRowLongPressEvent event);
+
 typedef PlutoOnRowsMovedEventCallback = void Function(
     PlutoGridOnRowsMovedEvent event);
 
@@ -73,6 +76,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowLongPress,
     this.onRowsMoved,
     this.onColumnsMoved,
     this.onColumnHide,
@@ -196,6 +200,11 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// [onRowSecondaryTap] is called when a mouse right-click event occurs.
   /// {@endtemplate}
   final PlutoOnRowSecondaryTapEventCallback? onRowSecondaryTap;
+
+  /// {@template pluto_grid_property_onRowLongPress}
+  /// [onRowLongPress] is called when a row is long pressed.
+  /// {@endtemplate}
+  final PlutoOnRowLongPressEventCallback? onRowLongPress;
 
   /// {@template pluto_grid_property_onRowsMoved}
   /// [onRowsMoved] is called after the row is dragged and moved
@@ -542,6 +551,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowChecked: widget.onRowChecked,
       onRowDoubleTap: widget.onRowDoubleTap,
       onRowSecondaryTap: widget.onRowSecondaryTap,
+      onRowLongPress: widget.onRowLongPress,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
       onColumnHide: widget.onColumnHide,
@@ -1435,6 +1445,22 @@ class PlutoGridOnRowSecondaryTapEvent {
   final Offset offset;
 
   const PlutoGridOnRowSecondaryTapEvent({
+    required this.row,
+    required this.rowIdx,
+    required this.cell,
+    required this.offset,
+  });
+}
+
+/// Argument of the [PlutoGrid.onRowLongPress] callback
+/// to receive the event of long pressing the row.
+class PlutoGridOnRowLongPressEvent {
+  final PlutoRow row;
+  final int rowIdx;
+  final PlutoCell cell;
+  final Offset offset;
+
+  const PlutoGridOnRowLongPressEvent({
     required this.row,
     required this.rowIdx,
     required this.cell,
