@@ -72,7 +72,8 @@ class PlutoBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressEnd(LongPressEndDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.onRowLongPress == null &&
+        stateManager.selectingMode.isNone) {
       return;
     }
 
