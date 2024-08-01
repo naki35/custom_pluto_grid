@@ -336,52 +336,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                             focusedBorder: _enabledBorder,
                             contentPadding: const EdgeInsets.all(5),
                             suffixIcon: widget.column.type.isDate
-                                ? IconButton(
-                                    onPressed: () async {
-                                      final selectedDate = _controller.text;
-                                      final DateTime? picked =
-                                          await showDatePicker(
-                                        context: context,
-                                        initialDate: (selectedDate != "")
-                                            ? DateFormat("dd.MM.yyyy")
-                                                .parse(selectedDate)
-                                            : DateTime.now(),
-                                        firstDate: DateTime(1900),
-                                        lastDate: DateTime(2100),
-                                        builder: (BuildContext context,
-                                            Widget? child) {
-                                          return Theme(
-                                            data: ThemeData.light().copyWith(
-                                              colorScheme:
-                                                  const ColorScheme.light(
-                                                primary: Color(0xff0e8f92),
-                                                onPrimary: Colors.white,
-                                                surface: Color(0xff0e8f92),
-                                                onSurface: Colors.black,
-                                              ),
-                                              dialogBackgroundColor:
-                                                  Colors.white,
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                      );
-                                      if (picked != null) {
-                                        _controller.text =
-                                            DateFormat('dd.MM.yyyy')
-                                                .format(picked);
-                                        _handleOnChanged(_controller.text, 0);
-                                      }
-
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                    },
-                                    icon: const Icon(
-                                      Icons.date_range,
-                                      size: 20,
-                                      color: Colors.grey,
-                                    ),
-                                  )
+                                ? buildDatePicker(context, style)
                                 : null,
                           ),
                         ),
@@ -406,6 +361,48 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  IconButton buildDatePicker(BuildContext context, PlutoGridStyleConfig style) {
+    return IconButton(
+      onPressed: () async {
+        final selectedDate = _controller.text;
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate.isNotEmpty
+              ? DateFormat("dd.MM.yyyy").parse(selectedDate)
+              : DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                datePickerTheme: DatePickerThemeData(
+                  backgroundColor: style.gridBackgroundColor,
+                  headerBackgroundColor: style.iconColor,
+                  headerForegroundColor: style.gridBackgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+        if (picked != null) {
+          _controller.text = DateFormat('dd.MM.yyyy').format(picked);
+          _handleOnChanged(_controller.text, 0);
+        }
+
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      icon: const Icon(
+        Icons.date_range,
+        size: 20,
+        color: Colors.grey,
       ),
     );
   }

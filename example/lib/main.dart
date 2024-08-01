@@ -158,7 +158,18 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           onChanged: (PlutoGridOnChangedEvent event) {
             print(event);
           },
-          configuration: const PlutoGridConfiguration(),
+          configuration: const PlutoGridConfiguration(
+            style: PlutoGridStyleConfig(
+              oddRowColor: Colors.white,
+              evenRowColor: const Color(0xfff8fafc),
+              iconColor: const Color(0xff0e8f92),
+              activatedBorderColor: const Color(0xff0e8f92),
+              activatedColor: const Color(0xffb2e7da),
+              disabledIconColor: const Color(0xff0e8f92),
+              gridBorderColor: Colors.transparent,
+              gridBackgroundColor: const Color(0xffefefef),
+            ),
+          ),
         ),
       ),
     );
