@@ -96,7 +96,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoRow(
       cells: {
         'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
+        'name': PlutoCell(value: 'izenerji'),
         'age': PlutoCell(value: 20),
         'role': PlutoCell(value: 'Programmer'),
         'joined': PlutoCell(value: '2021-01-01'),
@@ -107,7 +107,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoRow(
       cells: {
         'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
+        'name': PlutoCell(value: 'İZENERJİ'),
         'age': PlutoCell(value: 25),
         'role': PlutoCell(value: 'Designer'),
         'joined': PlutoCell(value: '2021-02-01'),
@@ -118,7 +118,18 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoRow(
       cells: {
         'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'Suzi'),
+        'name': PlutoCell(value: 'şimşekçiğelörın'),
+        'age': PlutoCell(value: 40),
+        'role': PlutoCell(value: 'Owner'),
+        'joined': PlutoCell(value: '2021-03-01'),
+        'working_time': PlutoCell(value: '11:00'),
+        'salary': PlutoCell(value: 700),
+      },
+    ),
+    PlutoRow(
+      cells: {
+        'id': PlutoCell(value: 'user4'),
+        'name': PlutoCell(value: 'ŞİMŞEKÇİĞELÖRIN'),
         'age': PlutoCell(value: 40),
         'role': PlutoCell(value: 'Owner'),
         'joined': PlutoCell(value: '2021-03-01'),
@@ -161,13 +172,13 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           configuration: const PlutoGridConfiguration(
             style: PlutoGridStyleConfig(
               oddRowColor: Colors.white,
-              evenRowColor: const Color(0xfff8fafc),
-              iconColor: const Color(0xff0e8f92),
-              activatedBorderColor: const Color(0xff0e8f92),
-              activatedColor: const Color(0xffb2e7da),
-              disabledIconColor: const Color(0xff0e8f92),
+              evenRowColor: Color(0xfff8fafc),
+              iconColor: Color(0xff0e8f92),
+              activatedBorderColor: Color(0xff0e8f92),
+              activatedColor: Color(0xffb2e7da),
+              disabledIconColor: Color(0xff0e8f92),
               gridBorderColor: Colors.transparent,
-              gridBackgroundColor: const Color(0xffefefef),
+              gridBackgroundColor: Color(0xffefefef),
             ),
           ),
         ),

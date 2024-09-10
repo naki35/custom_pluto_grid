@@ -246,9 +246,16 @@ class FilterHelper {
     required String? search,
     required PlutoColumn column,
   }) {
+    String normalize(String input) {
+      return input.replaceAll('İ', 'i').replaceAll('I', 'ı').toLowerCase();
+    }
+
+    String normalizedBase = normalize(base!);
+    String normalizedSearch = normalize(search!);
+
     return _compareWithRegExp(
-      RegExp.escape(search!),
-      base!,
+      RegExp.escape(normalizedSearch),
+      normalizedBase,
     );
   }
 
