@@ -73,7 +73,15 @@ mixin PaginationRowState implements IPlutoGridState {
   int get pageRangeTo => _range.to;
 
   @override
-  int get totalPage => (_length / pageSize).ceil();
+  int get totalPage {
+    int safeLength = _length >= 0 ? _length : 0;
+
+    if (pageSize <= 0) {
+      return 0;
+    }
+
+    return (safeLength / pageSize).ceil();
+  }
 
   @override
   bool get isPaginated => refRows.hasRange;
