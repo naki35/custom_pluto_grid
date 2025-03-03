@@ -582,11 +582,6 @@ mixin ColumnState implements IPlutoGridState {
       correctHorizontalOffset,
     );
 
-    if (onColumnResized != null) {
-      onColumnResized!(
-          PlutoGridOnColumnResizedEvent(column: column, width: column.width));
-    }
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       activateColumnsAutoSize();
     });

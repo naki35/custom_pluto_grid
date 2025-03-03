@@ -169,6 +169,9 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           onChanged: (PlutoGridOnChangedEvent event) {
             print(event);
           },
+          onColumnResized: (PlutoGridOnColumnResizedEvent event) {
+            print(event.width);
+          },
           configuration: const PlutoGridConfiguration(
             style: PlutoGridStyleConfig(
               oddRowColor: Colors.white,

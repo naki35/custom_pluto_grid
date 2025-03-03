@@ -116,6 +116,11 @@ class PlutoColumnTitleState extends PlutoStateWithChange<PlutoColumnTitle> {
   void _handleOnPointUp(PointerUpEvent event) {
     if (_isPointMoving) {
       stateManager.updateCorrectScrollOffset();
+
+      if (stateManager.onColumnResized != null) {
+        stateManager.onColumnResized!(PlutoGridOnColumnResizedEvent(
+            column: widget.column, width: widget.column.width));
+      }
     } else if (mounted && widget.column.enableContextMenu) {
       _showContextMenu(context, event.position);
     }
