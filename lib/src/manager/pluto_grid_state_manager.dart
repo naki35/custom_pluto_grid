@@ -80,6 +80,7 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
     this.onRowLongPress,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnResized,
     this.onColumnHide,
     this.onSearch,
     this.rowColorCallback,
@@ -147,6 +148,9 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
 
   @override
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
+  @override
+  final PlutoOnColumnResizedEventCallback? onColumnResized;
 
   @override
   final PlutoOnColumnHideEventCallback? onColumnHide;
@@ -238,6 +242,7 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
     super.onRowLongPress,
     super.onRowsMoved,
     super.onColumnsMoved,
+    super.onColumnResized,
     super.onColumnHide,
     super.onSearch,
     super.rowColorCallback,

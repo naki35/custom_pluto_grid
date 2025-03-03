@@ -107,7 +107,8 @@ class PlutoColumnTitleState extends PlutoStateWithChange<PlutoColumnTitle> {
 
     final bool isLTR = stateManager.isLTR;
 
-    stateManager.resizeColumn(widget.column, isLTR ? moveOffset : -moveOffset);
+    stateManager.resizeColumn(widget.column,
+        offset: isLTR ? moveOffset : -moveOffset);
 
     _columnRightPosition = event.position;
   }

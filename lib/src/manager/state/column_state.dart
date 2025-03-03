@@ -104,7 +104,7 @@ abstract class IColumnState {
   ///
   /// In case of [column.frozen.isFrozen],
   /// it is not changed if the width constraint of the frozen column is narrow.
-  void resizeColumn(PlutoColumn column, double offset);
+  void resizeColumn(PlutoColumn column, {double? offset, double? width});
 
   void autoFitColumn(BuildContext context, PlutoColumn column);
 
@@ -532,25 +532,41 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  void resizeColumn(PlutoColumn column, double offset) {
+  void resizeColumn(PlutoColumn column, {double? offset, double? width}) {
     if (columnsResizeMode.isNone || !column.enableDropToResize) {
       return;
     }
 
-    if (limitResizeColumn(column, offset)) {
+    if (offset != null) {
+      if (limitResizeColumn(column, offset)) {
+        return;
+      }
+    }
+
+    if (offset == null && width == null) {
       return;
     }
 
     bool updated = false;
 
-    if (columnsResizeMode.isNormal) {
-      final setWidth = column.width + offset;
+    if (offset != null) {
+      if (columnsResizeMode.isNormal) {
+        final setWidth = column.width + offset;
 
-      column.width = setWidth > column.minWidth ? setWidth : column.minWidth;
+        column.width = setWidth > column.minWidth ? setWidth : column.minWidth;
 
-      updated = setWidth == column.width;
+        updated = setWidth == column.width;
+      } else {
+        updated = _updateResizeColumns(column: column, offset: offset);
+      }
     } else {
-      updated = _updateResizeColumns(column: column, offset: offset);
+      if (columnsResizeMode.isNormal) {
+        final setWidth = width!;
+
+        column.width = setWidth > column.minWidth ? setWidth : column.minWidth;
+
+        updated = setWidth == column.width;
+      }
     }
 
     if (updated == false) {
@@ -565,6 +581,11 @@ mixin ColumnState implements IPlutoGridState {
       PlutoMoveDirection.right,
       correctHorizontalOffset,
     );
+
+    if (onColumnResized != null) {
+      onColumnResized!(
+          PlutoGridOnColumnResizedEvent(column: column, width: column.width));
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       activateColumnsAutoSize();
@@ -609,7 +630,7 @@ mixin ColumnState implements IPlutoGridState {
 
     resizeColumn(
       column,
-      textPainter.width -
+      offset: textPainter.width -
           column.width +
           (cellPadding.left + cellPadding.right) +
           2,

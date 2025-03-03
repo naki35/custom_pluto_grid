@@ -39,6 +39,9 @@ typedef PlutoOnRowsMovedEventCallback = void Function(
 typedef PlutoOnColumnsMovedEventCallback = void Function(
     PlutoGridOnColumnsMovedEvent event);
 
+typedef PlutoOnColumnResizedEventCallback = void Function(
+    PlutoGridOnColumnResizedEvent event);
+
 typedef PlutoOnColumnHideEventCallback = void Function(
     PlutoGridOnColumnHideEvent event);
 
@@ -79,6 +82,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.onRowLongPress,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnResized,
     this.onColumnHide,
     this.createHeader,
     this.createFooter,
@@ -218,6 +222,8 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// or frozen it to the left or right.
   /// {@endtemplate}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
+  final PlutoOnColumnResizedEventCallback? onColumnResized;
 
   final PlutoOnColumnHideEventCallback? onColumnHide;
 
@@ -554,6 +560,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowLongPress: widget.onRowLongPress,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
+      onColumnResized: widget.onColumnResized,
       onColumnHide: widget.onColumnHide,
       onSearch: widget.onSearch,
       rowColorCallback: widget.rowColorCallback,
@@ -1511,6 +1518,21 @@ class PlutoGridOnColumnsMovedEvent {
     text += columns.map((e) => e.title).join(',');
 
     return text;
+  }
+}
+
+class PlutoGridOnColumnResizedEvent {
+  final PlutoColumn column;
+  final double width;
+
+  const PlutoGridOnColumnResizedEvent({
+    required this.column,
+    required this.width,
+  });
+
+  @override
+  String toString() {
+    return '[PlutoGridOnColumnResizedEvent] ${column.title} width: $width';
   }
 }
 

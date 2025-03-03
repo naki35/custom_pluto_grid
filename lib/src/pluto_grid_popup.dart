@@ -41,6 +41,9 @@ class PlutoGridPopup {
   /// {@macro pluto_grid_property_onColumnsMoved}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
 
+  /// {@macro pluto_grid_property_onColumnResized}
+  final PlutoOnColumnResizedEventCallback? onColumnResized;
+
   /// {@macro pluto_grid_property_createHeader}
   final CreateHeaderCallBack? createHeader;
 
@@ -89,6 +92,7 @@ class PlutoGridPopup {
     this.onRowSecondaryTap,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnResized,
     this.createHeader,
     this.createFooter,
     this.noRowsWidget,
@@ -140,6 +144,7 @@ class PlutoGridPopup {
                           onRowSecondaryTap: onRowSecondaryTap,
                           onRowsMoved: onRowsMoved,
                           onColumnsMoved: onColumnsMoved,
+                          onColumnResized: onColumnResized,
                           createHeader: createHeader,
                           createFooter: createFooter,
                           noRowsWidget: noRowsWidget,

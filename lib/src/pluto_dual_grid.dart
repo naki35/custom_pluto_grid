@@ -188,6 +188,7 @@ class PlutoDualGridState extends State<PlutoDualGrid> {
         onRowLongPress: props.onRowLongPress,
         onRowsMoved: props.onRowsMoved,
         onColumnsMoved: props.onColumnsMoved,
+        onColumnResized: props.onColumnResized,
         createHeader: props.createHeader,
         createFooter: props.createFooter,
         noRowsWidget: props.noRowsWidget,
@@ -539,6 +540,9 @@ class PlutoDualGridProps {
   /// {@macro pluto_grid_property_onColumnsMoved}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
 
+  /// {@macro pluto_grid_property_onColumnResized}
+  final PlutoOnColumnResizedEventCallback? onColumnResized;
+
   /// {@macro pluto_grid_property_createHeader}
   final CreateHeaderCallBack? createHeader;
 
@@ -584,6 +588,7 @@ class PlutoDualGridProps {
     this.onRowLongPress,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnResized,
     this.createHeader,
     this.createFooter,
     this.noRowsWidget,
@@ -606,6 +611,7 @@ class PlutoDualGridProps {
     PlutoOptional<PlutoOnRowSecondaryTapEventCallback?>? onRowSecondaryTap,
     PlutoOptional<PlutoOnRowsMovedEventCallback?>? onRowsMoved,
     PlutoOptional<PlutoOnColumnsMovedEventCallback?>? onColumnsMoved,
+    PlutoOptional<PlutoOnColumnResizedEventCallback?>? onColumnResized,
     PlutoOptional<CreateHeaderCallBack?>? createHeader,
     PlutoOptional<CreateFooterCallBack?>? createFooter,
     PlutoOptional<Widget?>? noRowsWidget,
@@ -633,6 +639,9 @@ class PlutoDualGridProps {
       onRowsMoved: onRowsMoved == null ? this.onRowsMoved : onRowsMoved.value,
       onColumnsMoved:
           onColumnsMoved == null ? this.onColumnsMoved : onColumnsMoved.value,
+      onColumnResized: onColumnResized == null
+          ? this.onColumnResized
+          : onColumnResized.value,
       createHeader:
           createHeader == null ? this.createHeader : createHeader.value,
       createFooter:
