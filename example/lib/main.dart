@@ -115,28 +115,28 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'salary': PlutoCell(value: 400),
       },
     ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'şimşekçiğelörın'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-        'salary': PlutoCell(value: 700),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user4'),
-        'name': PlutoCell(value: 'ŞİMŞEKÇİĞELÖRIN'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-        'salary': PlutoCell(value: 700),
-      },
-    ),
+    // PlutoRow(
+    //   cells: {
+    //     'id': PlutoCell(value: 'user3'),
+    //     'name': PlutoCell(value: 'şimşekçiğelörın'),
+    //     'age': PlutoCell(value: 40),
+    //     'role': PlutoCell(value: 'Owner'),
+    //     'joined': PlutoCell(value: '2021-03-01'),
+    //     'working_time': PlutoCell(value: '11:00'),
+    //     'salary': PlutoCell(value: 700),
+    //   },
+    // ),
+    // PlutoRow(
+    //   cells: {
+    //     'id': PlutoCell(value: 'user4'),
+    //     'name': PlutoCell(value: 'ŞİMŞEKÇİĞELÖRIN'),
+    //     'age': PlutoCell(value: 40),
+    //     'role': PlutoCell(value: 'Owner'),
+    //     'joined': PlutoCell(value: '2021-03-01'),
+    //     'working_time': PlutoCell(value: '11:00'),
+    //     'salary': PlutoCell(value: 700),
+    //   },
+    // ),
   ];
 
   /// columnGroups that can group columns can be omitted.
@@ -161,7 +161,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         child: PlutoGrid(
           columns: columns,
           rows: rows,
-          columnGroups: columnGroups,
+          // columnGroups: columnGroups,
+          rowGroupBy: "id",
           onLoaded: (PlutoGridOnLoadedEvent event) {
             stateManager = event.stateManager;
             stateManager.setShowColumnFilter(true);
@@ -172,7 +173,19 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           onColumnResized: (PlutoGridOnColumnResizedEvent event) {
             print(event.width);
           },
+          onSelected: (PlutoGridOnSelectedEvent event) {
+            print(
+                "ID: ${event.rowIdx} - value: ${event.row?.cells["role"]?.value}");
+          },
+          mode: PlutoGridMode.selectWithOneTap,
           configuration: const PlutoGridConfiguration(
+            columnSize: const PlutoGridColumnSizeConfig(
+              autoSizeMode: PlutoAutoSizeMode.equal,
+              restoreAutoSizeAfterHideColumn: false,
+              restoreAutoSizeAfterInsertColumn: false,
+              restoreAutoSizeAfterMoveColumn: false,
+              restoreAutoSizeAfterRemoveColumn: false,
+            ),
             style: PlutoGridStyleConfig(
               oddRowColor: Colors.white,
               evenRowColor: Color(0xfff8fafc),

@@ -76,6 +76,8 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       (PlutoRow custom) => custom.cells[(stateManager.rowGroupBy ?? '')]?.value,
     );
 
+    int globalIndex = 0;
+
     return PlutoScrollbar(
       verticalController:
           scrollbarConfig.draggableScrollbar ? _verticalScroll : null,
@@ -123,40 +125,42 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
               : SingleChildScrollView(
                   controller: _verticalScroll,
                   child: Column(
-                    children: groupedMap.entries.map((e) {
-                      return ExpansionTile(
-                        title: Text(
-                          e.key.toString(),
-                          style:
-                              stateManager.configuration.style.columnTextStyle,
-                        ),
-                        initiallyExpanded: true,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        collapsedIconColor:
-                            stateManager.configuration.style.disabledIconColor,
-                        iconColor: stateManager.configuration.style.iconColor,
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: e.value.length,
-                            itemExtent: stateManager.rowTotalHeight,
-                            addRepaintBoundaries: false,
-                            itemBuilder: (ctx, i) {
-                              return PlutoBaseRow(
-                                key: ValueKey('body_row_${e.value[i].key}'),
-                                rowIdx: i,
-                                row: e.value[i],
-                                columns: _columns,
-                                stateManager: stateManager,
-                                visibilityLayout: true,
-                              );
-                            },
-                          )
-                        ],
-                      );
-                    }).toList(),
+                    children: groupedMap.entries.map(
+                      (e) {
+                        return ExpansionTile(
+                          title: Text(
+                            e.key.toString(),
+                            style: stateManager
+                                .configuration.style.columnTextStyle,
+                          ),
+                          initiallyExpanded: true,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          collapsedIconColor: stateManager
+                              .configuration.style.disabledIconColor,
+                          iconColor: stateManager.configuration.style.iconColor,
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: e.value.length,
+                              itemExtent: stateManager.rowTotalHeight,
+                              addRepaintBoundaries: false,
+                              itemBuilder: (ctx, i) {
+                                return PlutoBaseRow(
+                                  key: ValueKey('body_row_${e.value[i].key}'),
+                                  rowIdx: globalIndex++,
+                                  row: e.value[i],
+                                  columns: _columns,
+                                  stateManager: stateManager,
+                                  visibilityLayout: true,
+                                );
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    ).toList(),
                   ),
                 ),
         ),
