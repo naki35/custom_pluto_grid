@@ -40,6 +40,8 @@ mixin FocusState implements IPlutoGridState {
 
     if (keepFocus) {
       gridFocusNode.requestFocus();
+    } else {
+      gridFocusNode.unfocus();
     }
 
     if (keepFocus) {
