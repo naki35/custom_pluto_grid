@@ -320,6 +320,7 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
                           focusNode: _focusNode,
                           controller: _controller,
                           enabled: _enabled,
+                          readOnly: stateManager.showLoading ? true : false,
                           style: style.cellTextStyle,
                           onTap: _handleOnTap,
                           onChanged: _handleOnChanged,
