@@ -35,26 +35,22 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoColumn(
       title: 'Id',
       field: 'id',
-      type: PlutoColumnType.text(),
+      type: PlutoColumnType.money(),
     ),
     PlutoColumn(
       title: 'Name',
       field: 'name',
-      type: PlutoColumnType.text(),
+      type: PlutoColumnType.phone(),
     ),
     PlutoColumn(
       title: 'Age',
       field: 'age',
-      type: PlutoColumnType.number(),
+      type: PlutoColumnType.numeric(),
     ),
     PlutoColumn(
       title: 'Role',
       field: 'role',
-      type: PlutoColumnType.select(<String>[
-        'Programmer',
-        'Designer',
-        'Owner',
-      ]),
+      type: PlutoColumnType.decimal(),
     ),
     PlutoColumn(
       title: 'Joined',
@@ -95,10 +91,10 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoRow> rows = [
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'izenerji'),
+        'id': PlutoCell(value: ''),
+        'name': PlutoCell(value: ''),
         'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
+        'role': PlutoCell(value: ''),
         'joined': PlutoCell(value: '2021-01-01'),
         'working_time': PlutoCell(value: '09:00'),
         'salary': PlutoCell(value: 300),
@@ -106,10 +102,10 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'İZENERJİ'),
+        'id': PlutoCell(value: ''),
+        'name': PlutoCell(value: ''),
         'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
+        'role': PlutoCell(value: ''),
         'joined': PlutoCell(value: '2021-02-01'),
         'working_time': PlutoCell(value: '10:00'),
         'salary': PlutoCell(value: 400),
@@ -158,45 +154,59 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(15),
-        child: PlutoGrid(
-          columns: columns,
-          rows: rows,
-          // columnGroups: columnGroups,
-          rowGroupBy: "id",
-          onLoaded: (PlutoGridOnLoadedEvent event) {
-            stateManager = event.stateManager;
-            stateManager.setShowColumnFilter(true);
-          },
-          onChanged: (PlutoGridOnChangedEvent event) {
-            print(event);
-          },
-          onColumnResized: (PlutoGridOnColumnResizedEvent event) {
-            print(event.width);
-          },
-          onSelected: (PlutoGridOnSelectedEvent event) {
-            print(
-                "ID: ${event.rowIdx} - value: ${event.row?.cells["role"]?.value}");
-          },
-          mode: PlutoGridMode.selectWithOneTap,
-          configuration: const PlutoGridConfiguration(
-            columnSize: const PlutoGridColumnSizeConfig(
-              autoSizeMode: PlutoAutoSizeMode.equal,
-              restoreAutoSizeAfterHideColumn: false,
-              restoreAutoSizeAfterInsertColumn: false,
-              restoreAutoSizeAfterMoveColumn: false,
-              restoreAutoSizeAfterRemoveColumn: false,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                stateManager.clearCurrentCell();
+              },
+              child: Text('Focus'),
             ),
-            style: PlutoGridStyleConfig(
-              oddRowColor: Colors.white,
-              evenRowColor: Color(0xfff8fafc),
-              iconColor: Color(0xff0e8f92),
-              activatedBorderColor: Color(0xff0e8f92),
-              activatedColor: Color(0xffb2e7da),
-              disabledIconColor: Color(0xff0e8f92),
-              gridBorderColor: Colors.transparent,
-              gridBackgroundColor: Color(0xffefefef),
+            Expanded(
+              child: PlutoGrid(
+                columns: columns,
+                rows: rows,
+                // columnGroups: columnGroups,
+                onLoaded: (PlutoGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                  stateManager.setShowColumnFilter(true);
+                },
+                onChanged: (PlutoGridOnChangedEvent event) {
+                  print(event);
+                },
+                onColumnResized: (PlutoGridOnColumnResizedEvent event) {
+                  print(event.width);
+                },
+                onSearch: (value, setPage) {
+                  //wait 1 second
+                },
+                mode: PlutoGridMode.normal,
+                configuration: PlutoGridConfiguration(
+                  columnSize: const PlutoGridColumnSizeConfig(
+                    autoSizeMode: PlutoAutoSizeMode.equal,
+                    restoreAutoSizeAfterMoveColumn: false,
+                  ),
+                  localeText:
+                      const PlutoGridLocaleText.turkish(filterContains: ''),
+                  scrollbar: const PlutoGridScrollbarConfig(
+                    isAlwaysShown: true,
+                    scrollbarThickness: 10,
+                  ),
+                  columnFilter: PlutoGridColumnFilterConfig(
+                    debounceMilliseconds: 300,
+                  ),
+                  enterKeyAction: PlutoGridEnterKeyAction.none,
+                  style: PlutoGridStyleConfig(
+                    oddRowColor: Colors.white,
+                    evenRowColor: const Color(0xfff8fafc),
+                    activatedColor: const Color(0xffb2e7da),
+                    gridBorderColor: Colors.transparent,
+                    gridBackgroundColor: const Color(0xffefefef),
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

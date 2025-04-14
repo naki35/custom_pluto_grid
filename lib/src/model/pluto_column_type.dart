@@ -1,4 +1,7 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart'
+    as currency_formatter;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 
 abstract class PlutoColumnType {
@@ -9,6 +12,17 @@ abstract class PlutoColumnType {
     dynamic defaultValue = '',
   }) {
     return PlutoColumnTypeText(
+      defaultValue: defaultValue,
+    );
+  }
+
+  /// Set to numeric column (only digits, no formatting).
+  ///
+  /// [defaultValue] The default value for the column
+  factory PlutoColumnType.numeric({
+    dynamic defaultValue = 0,
+  }) {
+    return PlutoColumnTypeNumeric(
       defaultValue: defaultValue,
     );
   }
@@ -154,6 +168,39 @@ abstract class PlutoColumnType {
     );
   }
 
+  /// Set as a phone number column.
+  ///
+  /// [defaultValue] The default value for the column
+  factory PlutoColumnType.phone({
+    dynamic defaultValue = '',
+  }) {
+    return PlutoColumnTypePhone(
+      defaultValue: defaultValue,
+    );
+  }
+
+  /// Set as a money column.
+  ///
+  /// [defaultValue] The default value for the column
+  factory PlutoColumnType.money({
+    dynamic defaultValue = 0,
+  }) {
+    return PlutoColumnTypeMoney(
+      defaultValue: defaultValue,
+    );
+  }
+
+  /// Set as a decimal column.
+  ///
+  /// [defaultValue] The default value for the column
+  factory PlutoColumnType.decimal({
+    dynamic defaultValue = 0,
+  }) {
+    return PlutoColumnTypeDecimal(
+      defaultValue: defaultValue,
+    );
+  }
+
   bool isValid(dynamic value);
 
   int compare(dynamic a, dynamic b);
@@ -173,6 +220,14 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
   bool get isDate => this is PlutoColumnTypeDate;
 
   bool get isTime => this is PlutoColumnTypeTime;
+
+  bool get isPhone => this is PlutoColumnTypePhone;
+
+  bool get isMoney => this is PlutoColumnTypeMoney;
+
+  bool get isDecimal => this is PlutoColumnTypeDecimal;
+
+  bool get isNumeric => this is PlutoColumnTypeNumeric;
 
   PlutoColumnTypeText get text {
     if (this is! PlutoColumnTypeText) {
@@ -220,6 +275,38 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
     }
 
     return this as PlutoColumnTypeTime;
+  }
+
+  PlutoColumnTypePhone get phone {
+    if (this is! PlutoColumnTypePhone) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypePhone;
+  }
+
+  PlutoColumnTypeMoney get money {
+    if (this is! PlutoColumnTypeMoney) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypeMoney;
+  }
+
+  PlutoColumnTypeDecimal get decimal {
+    if (this is! PlutoColumnTypeDecimal) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypeDecimal;
+  }
+
+  PlutoColumnTypeNumeric get numeric {
+    if (this is! PlutoColumnTypeNumeric) {
+      throw TypeError();
+    }
+
+    return this as PlutoColumnTypeNumeric;
   }
 
   bool get hasFormat => this is PlutoColumnTypeHasFormat;
@@ -505,6 +592,239 @@ class PlutoColumnTypeTime
   @override
   dynamic makeCompareValue(dynamic v) {
     return v;
+  }
+}
+
+class PhoneNumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    final formatted = _formatPhoneNumber(digits);
+
+    return newValue.copyWith(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
+  String _formatPhoneNumber(String digits) {
+    if (digits.length > 10) digits = digits.substring(0, 10);
+
+    final buffer = StringBuffer();
+    if (digits.isNotEmpty) {
+      buffer.write('(');
+      if (digits.length > 3) {
+        buffer.write(digits.substring(0, 3));
+        buffer.write(') ');
+        if (digits.length > 6) {
+          buffer.write(digits.substring(3, 6));
+          buffer.write(' ');
+          buffer.write(digits.substring(6));
+        } else {
+          buffer.write(digits.substring(3));
+        }
+      } else {
+        buffer.write(digits);
+      }
+    }
+
+    return buffer.toString();
+  }
+}
+
+class PlutoColumnTypePhone
+    implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
+  @override
+  final dynamic defaultValue;
+
+  @override
+  final String format = '';
+
+  @override
+  final bool applyFormatOnInit = true;
+
+  const PlutoColumnTypePhone({
+    this.defaultValue,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    if (value == null || value.toString().isEmpty) return true;
+    final digits = value.toString().replaceAll(RegExp(r'\D'), '');
+    return digits.length <= 10;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () => a.toString().compareTo(b.toString()));
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString().replaceAll(RegExp(r'\D'), '');
+  }
+
+  @override
+  String applyFormat(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '';
+    final formatter = PhoneNumberInputFormatter();
+    final result = formatter.formatEditUpdate(
+      TextEditingValue.empty,
+      TextEditingValue(text: value.toString()),
+    );
+    return result.text;
+  }
+}
+
+class PlutoColumnTypeMoney
+    implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
+  @override
+  final dynamic defaultValue;
+
+  @override
+  final String format = '';
+
+  @override
+  final bool applyFormatOnInit = true;
+
+  const PlutoColumnTypeMoney({
+    this.defaultValue,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    if (value == null || value.toString().isEmpty) return true;
+    return double.tryParse(
+            value.toString().replaceAll(RegExp(r'[^\d.]'), '')) !=
+        null;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () {
+      final aValue =
+          double.tryParse(a.toString().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+      final bValue =
+          double.tryParse(b.toString().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+      return aValue.compareTo(bValue);
+    });
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString().replaceAll(RegExp(r'[^\d.]'), '');
+  }
+
+  @override
+  String applyFormat(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '';
+    final formatter = currency_formatter.CurrencyTextInputFormatter.currency(
+      locale: 'tr',
+      symbol: '',
+    );
+    final result = formatter.formatEditUpdate(
+      TextEditingValue.empty,
+      TextEditingValue(text: value.toString()),
+    );
+    return result.text;
+  }
+}
+
+class PlutoColumnTypeDecimal
+    implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
+  @override
+  final dynamic defaultValue;
+
+  @override
+  final String format = '';
+
+  @override
+  final bool applyFormatOnInit = true;
+
+  const PlutoColumnTypeDecimal({
+    this.defaultValue,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    if (value == null || value.toString().isEmpty) return true;
+    return double.tryParse(
+            value.toString().replaceAll(RegExp(r'[^\d.]'), '')) !=
+        null;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () {
+      final aValue =
+          double.tryParse(a.toString().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+      final bValue =
+          double.tryParse(b.toString().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+      return aValue.compareTo(bValue);
+    });
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString().replaceAll(RegExp(r'[^\d.]'), '');
+  }
+
+  @override
+  String applyFormat(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '';
+    final formatter = currency_formatter.CurrencyTextInputFormatter.currency(
+      locale: 'tr',
+      decimalDigits: 6,
+      symbol: '',
+    );
+    final result = formatter.formatEditUpdate(
+      TextEditingValue.empty,
+      TextEditingValue(text: value.toString()),
+    );
+    return result.text;
+  }
+}
+
+class PlutoColumnTypeNumeric
+    implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
+  @override
+  final dynamic defaultValue;
+
+  @override
+  final String format = '';
+
+  @override
+  final bool applyFormatOnInit = true;
+
+  const PlutoColumnTypeNumeric({
+    this.defaultValue,
+  });
+
+  @override
+  bool isValid(dynamic value) {
+    if (value == null || value.toString().isEmpty) return true;
+    return int.tryParse(value.toString()) != null;
+  }
+
+  @override
+  int compare(dynamic a, dynamic b) {
+    return _compareWithNull(a, b, () {
+      final aValue = int.tryParse(a.toString()) ?? 0;
+      final bValue = int.tryParse(b.toString()) ?? 0;
+      return aValue.compareTo(bValue);
+    });
+  }
+
+  @override
+  dynamic makeCompareValue(dynamic v) {
+    return v.toString();
+  }
+
+  @override
+  String applyFormat(dynamic value) {
+    return value?.toString() ?? '';
   }
 }
 

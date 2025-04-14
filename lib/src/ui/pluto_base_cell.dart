@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid/src/ui/cells/pluto_numeric_cell.dart';
 
 import 'ui.dart';
+import 'cells/pluto_phone_cell.dart';
+import 'cells/pluto_money_cell.dart';
+import 'cells/pluto_decimal_cell.dart';
 
 class PlutoBaseCell extends StatelessWidget
     implements PlutoVisibilityLayoutChild {
@@ -387,6 +391,34 @@ class _CellState extends PlutoStateWithChange<_Cell> {
         );
       } else if (widget.column.type.isCurrency) {
         return PlutoCurrencyCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isPhone) {
+        return PlutoPhoneCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isMoney) {
+        return PlutoMoneyCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isDecimal) {
+        return PlutoDecimalCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isNumeric) {
+        return PlutoNumericCell(
           stateManager: stateManager,
           cell: widget.cell,
           column: widget.column,
