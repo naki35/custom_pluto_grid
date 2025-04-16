@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid/src/ui/cells/pluto_custom_renderer_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,22 +36,75 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     PlutoColumn(
       title: 'Id',
       field: 'id',
-      type: PlutoColumnType.money(),
+      type: PlutoColumnType.text(),
     ),
+    // TextFormField için özel renderer kullanımı
     PlutoColumn(
       title: 'Name',
       field: 'name',
-      type: PlutoColumnType.phone(),
+      type: PlutoColumnType.text(),
+      renderer: createCustomRenderer(
+        widgetBuilder: (context, helper) {
+          return TextFormField(
+            focusNode: helper.cellFocus,
+            controller: helper.textController,
+            onChanged: helper.handleOnChanged,
+            onEditingComplete: helper.handleOnComplete,
+            onTap: helper.handleOnTap,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+            ),
+            style: helper.stateManager.configuration.style.cellTextStyle,
+          );
+        },
+      ),
+    ),
+    // Dropdown için özel renderer kullanımı
+    PlutoColumn(
+      title: 'Role',
+      field: 'role',
+      type: PlutoColumnType.text(),
+      renderer: createCustomRenderer(
+        widgetBuilder: (context, helper) {
+          final roles = ['Admin', 'User', 'Guest', 'Manager'];
+          String currentValue = helper.cell.value.toString();
+
+          // Boş değer ya da geçersiz değer kontrolü
+          if (currentValue.isEmpty || !roles.contains(currentValue)) {
+            currentValue = roles.first;
+            // Varsayılan değeri ayarla
+            Future.microtask(() => helper.changeValue(currentValue));
+          }
+
+          return DropdownButton<String>(
+            value: currentValue,
+            isExpanded: true,
+            focusNode: helper.cellFocus,
+            underline: Container(height: 0),
+            onTap: helper.handleOnTap,
+            onChanged: (newValue) {
+              if (newValue != null) {
+                helper.changeValue(newValue);
+              }
+            },
+            items: roles.map((role) {
+              return DropdownMenuItem<String>(
+                value: role,
+                child: Text(
+                  role,
+                  style: helper.stateManager.configuration.style.cellTextStyle,
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
     ),
     PlutoColumn(
       title: 'Age',
       field: 'age',
       type: PlutoColumnType.numeric(),
-    ),
-    PlutoColumn(
-      title: 'Role',
-      field: 'role',
-      type: PlutoColumnType.decimal(),
     ),
     PlutoColumn(
       title: 'Joined',
@@ -63,7 +117,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       type: PlutoColumnType.time(),
     ),
     PlutoColumn(
-      title: 'salary',
+      title: 'Salary',
       field: 'salary',
       type: PlutoColumnType.currency(),
       footerRenderer: (rendererContext) {
@@ -91,62 +145,49 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   final List<PlutoRow> rows = [
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: ''),
-        'name': PlutoCell(value: ''),
+        'id': PlutoCell(value: 'user1'),
+        'name': PlutoCell(value: 'John'),
+        'role': PlutoCell(value: 'Admin'),
         'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: ''),
         'joined': PlutoCell(value: '2021-01-01'),
         'working_time': PlutoCell(value: '09:00'),
-        'salary': PlutoCell(value: 300),
+        'salary': PlutoCell(value: 3000),
       },
     ),
     PlutoRow(
       cells: {
-        'id': PlutoCell(value: ''),
-        'name': PlutoCell(value: ''),
+        'id': PlutoCell(value: 'user2'),
+        'name': PlutoCell(value: 'Lisa'),
+        'role': PlutoCell(value: 'User'),
         'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: ''),
         'joined': PlutoCell(value: '2021-02-01'),
         'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
+        'salary': PlutoCell(value: 4000),
       },
     ),
-    // PlutoRow(
-    //   cells: {
-    //     'id': PlutoCell(value: 'user3'),
-    //     'name': PlutoCell(value: 'şimşekçiğelörın'),
-    //     'age': PlutoCell(value: 40),
-    //     'role': PlutoCell(value: 'Owner'),
-    //     'joined': PlutoCell(value: '2021-03-01'),
-    //     'working_time': PlutoCell(value: '11:00'),
-    //     'salary': PlutoCell(value: 700),
-    //   },
-    // ),
-    // PlutoRow(
-    //   cells: {
-    //     'id': PlutoCell(value: 'user4'),
-    //     'name': PlutoCell(value: 'ŞİMŞEKÇİĞELÖRIN'),
-    //     'age': PlutoCell(value: 40),
-    //     'role': PlutoCell(value: 'Owner'),
-    //     'joined': PlutoCell(value: '2021-03-01'),
-    //     'working_time': PlutoCell(value: '11:00'),
-    //     'salary': PlutoCell(value: 700),
-    //   },
-    // ),
+    PlutoRow(
+      cells: {
+        'id': PlutoCell(value: 'user3'),
+        'name': PlutoCell(value: 'Michael'),
+        'role': PlutoCell(value: 'Manager'),
+        'age': PlutoCell(value: 30),
+        'joined': PlutoCell(value: '2021-03-01'),
+        'working_time': PlutoCell(value: '08:00'),
+        'salary': PlutoCell(value: 5000),
+      },
+    ),
   ];
 
-  /// columnGroups that can group columns can be omitted.
+  // Column groups if needed
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
-    PlutoColumnGroup(title: 'User information', fields: ['name', 'age']),
+    PlutoColumnGroup(title: 'User information', fields: ['name', 'role']),
     PlutoColumnGroup(title: 'Status', children: [
-      PlutoColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-      PlutoColumnGroup(title: 'Etc.', fields: ['joined', 'working_time']),
+      PlutoColumnGroup(
+          title: 'Details', fields: ['age', 'joined', 'working_time']),
     ]),
   ];
 
-  /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
-  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
   late final PlutoGridStateManager stateManager;
 
   @override
@@ -156,11 +197,34 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         padding: const EdgeInsets.all(15),
         child: Column(
           children: [
-            TextButton(
-              onPressed: () {
-                stateManager.clearCurrentCell();
-              },
-              child: Text('Focus'),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    stateManager.clearCurrentCell();
+                  },
+                  child: Text('Clear Focus'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Yeni bir satır ekleme
+                    stateManager.appendRows([
+                      PlutoRow(
+                        cells: {
+                          'id': PlutoCell(value: 'user${rows.length + 1}'),
+                          'name': PlutoCell(value: ''),
+                          'role': PlutoCell(value: ''),
+                          'age': PlutoCell(value: 0),
+                          'joined': PlutoCell(value: ''),
+                          'working_time': PlutoCell(value: ''),
+                          'salary': PlutoCell(value: 0),
+                        },
+                      ),
+                    ]);
+                  },
+                  child: Text('Add Row'),
+                ),
+              ],
             ),
             Expanded(
               child: PlutoGrid(
@@ -177,9 +241,6 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 onColumnResized: (PlutoGridOnColumnResizedEvent event) {
                   print(event.width);
                 },
-                onSearch: (value, setPage) {
-                  //wait 1 second
-                },
                 mode: PlutoGridMode.normal,
                 configuration: PlutoGridConfiguration(
                   columnSize: const PlutoGridColumnSizeConfig(
@@ -195,13 +256,14 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                   columnFilter: PlutoGridColumnFilterConfig(
                     debounceMilliseconds: 300,
                   ),
-                  enterKeyAction: PlutoGridEnterKeyAction.none,
+                  enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveDown,
                   style: PlutoGridStyleConfig(
                     oddRowColor: Colors.white,
                     evenRowColor: const Color(0xfff8fafc),
                     activatedColor: const Color(0xffb2e7da),
                     gridBorderColor: Colors.transparent,
                     gridBackgroundColor: const Color(0xffefefef),
+                    cellColorInEditState: Colors.white,
                   ),
                 ),
               ),
